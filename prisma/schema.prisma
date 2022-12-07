@@ -11,7 +11,7 @@ datasource db {
 }
 
 model User {
-  id        String  @id @default(uuid())
+  id        String  @id @default(cuid())
   username  String  @unique
   password  String
   account   Account @relation(fields: [accountId], references: [id])
@@ -21,7 +21,7 @@ model User {
 }
 
 model Account {
-  id                String        @id @default(uuid())
+  id                String        @id @default(cuid())
   balance           Decimal       @default(100) @db.Decimal(9, 2)
   user              User?
   creditTransaction Transaction[] @relation("creditTransaction")
@@ -31,7 +31,7 @@ model Account {
 }
 
 model Transaction {
-  id                String   @id @default(uuid())
+  id                String   @id @default(cuid())
   creditedAccount   Account  @relation("creditTransaction", fields: [creditedAccountId], references: [id])
   creditedAccountId String   @map("credited_account_id")
   debitedAccount    Account  @relation("debitTransaction", fields: [debitedAccountId], references: [id])
