@@ -22,7 +22,7 @@ model User {
 
 model Account {
   id                String        @id @default(cuid())
-  balance           Decimal       @default(100) @db.Decimal(9, 2)
+  balance           Decimal       @default(100.00) @db.Decimal(9, 2)
   user              User?
   creditTransaction Transaction[] @relation("creditTransaction")
   debitTransaction  Transaction[] @relation("debitTransaction")
