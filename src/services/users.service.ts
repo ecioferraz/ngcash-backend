@@ -3,8 +3,10 @@ import {
   HttpStatus,
   Injectable,
   NotFoundException,
+  UnauthorizedException,
 } from '@nestjs/common';
 import { Prisma, User } from '@prisma/client';
+import UserMatch from 'src/interfaces/UserMatch';
 import UserWithoutPassword from 'src/interfaces/UserWithoutPassword';
 import PasswordProvider from 'src/providers/PasswordProvider';
 import PrismaService from './prisma.service';
@@ -16,7 +18,7 @@ export default class UsersService {
     private passwordProvider: PasswordProvider,
   ) {}
 
-  async getById(user: Prisma.UserWhereUniqueInput) {
+  async readOne(user: Prisma.UserWhereUniqueInput) {
     const { id } = user;
 
     const userFound: UserWithoutPassword | null =
@@ -61,7 +63,18 @@ export default class UsersService {
     return newUser as User;
   }
 
-  async getAll() {
+  async readBalance(user: UserMatch) {
+    const matchedUser = await this.prisma.user.findFirst({
+      where: user,
+      include: { account: true },
+    });
+
+    if (!matchedUser) throw new UnauthorizedException('Unauthorized user');
+
+    return matchedUser.account.balance;
+  }
+
+  async read() {
     return await this.prisma.user.findMany();
   }
 
