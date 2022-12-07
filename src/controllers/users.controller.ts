@@ -6,8 +6,11 @@ import {
   Get,
   Param,
   Post,
+  UseGuards,
 } from '@nestjs/common';
 import { User } from '@prisma/client';
+import JwtAuthGuard from 'src/guards/jwt-auth.guard';
+import UserMatch from 'src/interfaces/UserMatch';
 import { UserSchema, UserType } from 'src/schema/UserSchema';
 import UsersService from 'src/services/users.service';
 
@@ -27,13 +30,19 @@ export default class UsersController {
   }
 
   @Get('/:id')
-  async getUser(@Param('id') id: User['id']) {
-    return this.usersService.getById({ id });
+  async readOne(@Param('id') id: User['id']) {
+    return this.usersService.readOne({ id });
   }
 
   @Get()
-  async getAll() {
-    return this.usersService.getAll();
+  async read() {
+    return this.usersService.read();
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Get('/:id/balance')
+  async readBalance(@Param('id') id: User['id'], @Body() user: UserMatch) {
+    return this.usersService.readBalance({ id, username: user.username });
   }
 
   @Delete('/:id')
