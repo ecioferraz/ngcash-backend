@@ -1,17 +1,16 @@
 import {
+  BadRequestException,
   Body,
   Controller,
-  Get,
   Post,
-  Request,
   UseGuards,
 } from '@nestjs/common';
 import { User } from '@prisma/client';
-import JwtAuthGuard from 'src/guards/jwt-auth.guard';
 import LocalAuthGuard from 'src/guards/local-auth.guard';
+import { UserSchema, UserType } from 'src/schema/UserSchema';
 import AuthService from 'src/services/auth.service';
 
-@Controller('auth')
+@Controller()
 export default class AuthController {
   constructor(private readonly authService: AuthService) {}
 
@@ -21,9 +20,14 @@ export default class AuthController {
     return this.authService.login(user);
   }
 
-  @UseGuards(JwtAuthGuard)
-  @Get('profile')
-  getProfile(@Request() req) {
-    return req.user;
+  @Post('/register')
+  async register(@Body() user: UserType) {
+    const parsed = UserSchema.safeParse(user);
+
+    if (!parsed.success) {
+      throw new BadRequestException(parsed.error.issues[0].message);
+    }
+
+    return this.authService.register(user);
   }
 }

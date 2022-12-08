@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { User } from '@prisma/client';
+import { Prisma, User } from '@prisma/client';
 import UserWithoutPassword from 'src/interfaces/UserWithoutPassword';
 import PasswordProvider from 'src/providers/PasswordProvider';
 import { UserType } from 'src/schema/UserSchema';
@@ -42,5 +42,9 @@ export default class AuthService {
     const payload = { username: user.username, sub: user.id };
 
     return { token: this.jwtService.sign(payload) };
+  }
+
+  async register(user: Prisma.UserCreateWithoutAccountInput) {
+    return this.usersService.create(user);
   }
 }
