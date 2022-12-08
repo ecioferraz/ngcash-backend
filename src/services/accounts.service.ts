@@ -1,26 +1,37 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { Account } from '@prisma/client';
+import UserMatch from 'src/interfaces/UserMatch';
 import PrismaService from './prisma.service';
 
 @Injectable()
 export default class AccountsService {
   constructor(private prisma: PrismaService) {}
 
-  async create(balance = 100) {
-    return this.prisma.account.create({ data: { balance } });
+  async create() {
+    return this.prisma.account.create({ data: {} });
   }
 
   async read() {
     return this.prisma.account.findMany();
   }
 
-  async readOne(accountId: string) {
-    const account = await this.prisma.user.findUnique({ where: { accountId } });
+  async readOne(id: string) {
+    return this.prisma.account.findUnique({ where: { id } });
+  }
 
-    return account;
+  async readBalance(user: UserMatch) {
+    const { id, username } = user;
+
+    const account = await this.prisma.account.findFirst({
+      where: { id, user: { username } },
+    });
+
+    if (!account) throw new UnauthorizedException('Unauthorized user');
+
+    return account?.balance;
   }
 
   async delete(id: Account['id']) {
-    return this.prisma.account.deleteMany({ where: { id } });
+    return this.prisma.account.delete({ where: { id } });
   }
 }

@@ -3,17 +3,17 @@ import {
   HttpStatus,
   Injectable,
   NotFoundException,
-  UnauthorizedException,
 } from '@nestjs/common';
 import { Prisma, User } from '@prisma/client';
-import UserMatch from 'src/interfaces/UserMatch';
 import UserWithoutPassword from 'src/interfaces/UserWithoutPassword';
 import PasswordProvider from 'src/providers/PasswordProvider';
+import AccountsService from './accounts.service';
 import PrismaService from './prisma.service';
 
 @Injectable()
 export default class UsersService {
   constructor(
+    private accountService: AccountsService,
     private prisma: PrismaService,
     private passwordProvider: PasswordProvider,
   ) {}
@@ -40,9 +40,7 @@ export default class UsersService {
   async create(user: Prisma.UserCreateWithoutAccountInput) {
     const { password, username } = user;
 
-    const userExists = await this.prisma.user.findUnique({
-      where: { username },
-    });
+    const userExists = await this.findOne({ username });
 
     if (userExists) {
       throw new HttpException('User already exists', HttpStatus.CONFLICT);
@@ -50,9 +48,7 @@ export default class UsersService {
 
     const hashedPassword = await this.passwordProvider.hashPassword(password);
 
-    const { id: accountId } = await this.prisma.account.create({
-      data: { balance: 100 },
-    });
+    const { id: accountId } = await this.accountService.create();
 
     const newUser: UserWithoutPassword = await this.prisma.user.create({
       data: { username, password: hashedPassword, accountId },
@@ -63,19 +59,10 @@ export default class UsersService {
     return newUser as User;
   }
 
-  async readBalance(user: UserMatch) {
-    const matchedUser = await this.prisma.user.findFirst({
-      where: user,
-      include: { account: true },
-    });
-
-    if (!matchedUser) throw new UnauthorizedException('Unauthorized user');
-
-    return matchedUser.account.balance;
-  }
-
   async read() {
-    return await this.prisma.user.findMany();
+    return this.prisma.user.findMany({
+      select: { id: true, username: true, accountId: true },
+    });
   }
 
   async delete(user: Prisma.UserWhereUniqueInput) {

@@ -9,6 +9,7 @@ import {
 } from '@nestjs/common';
 import { Account } from '@prisma/client';
 import JwtAuthGuard from 'src/guards/jwt-auth.guard';
+import UserMatch from 'src/interfaces/UserMatch';
 import AccountsService from 'src/services/accounts.service';
 
 @UseGuards(JwtAuthGuard)
@@ -17,15 +18,19 @@ export default class AccountsController {
   constructor(private readonly accountsService: AccountsService) {}
 
   @Post()
-  async create(@Body() account: { balance: number }) {
-    const { balance } = account;
-
-    return this.accountsService.create(balance);
+  async create() {
+    return this.accountsService.create();
   }
 
   @Get()
   async getAll() {
     return this.accountsService.read();
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Get('/balance')
+  async readBalance(@Body() user: UserMatch) {
+    return this.accountsService.readBalance(user);
   }
 
   @Get('/:id')
