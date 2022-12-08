@@ -27,7 +27,6 @@ export default class AccountsController {
     return this.accountsService.read();
   }
 
-  @UseGuards(JwtAuthGuard)
   @Get('/balance')
   async readBalance(@Body() user: UserMatch) {
     return this.accountsService.readBalance(user);

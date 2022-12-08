@@ -1,4 +1,9 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { Account } from '@prisma/client';
 import UserMatch from 'src/interfaces/UserMatch';
 import PrismaService from './prisma.service';
@@ -16,11 +21,19 @@ export default class AccountsService {
   }
 
   async readOne(id: string) {
-    return this.prisma.account.findUnique({ where: { id } });
+    const account = await this.prisma.account.findUnique({ where: { id } });
+
+    if (!account) throw new NotFoundException('Account not found');
+
+    return account;
   }
 
   async readBalance(user: UserMatch) {
     const { id, username } = user;
+
+    if (!id || !username) {
+      throw new BadRequestException('Missing account id or username');
+    }
 
     const account = await this.prisma.account.findFirst({
       where: { id, user: { username } },
@@ -32,6 +45,8 @@ export default class AccountsService {
   }
 
   async delete(id: Account['id']) {
-    return this.prisma.account.delete({ where: { id } });
+    return this.prisma.account.delete({ where: { id } }).catch(() => {
+      throw new NotFoundException('Account not found');
+    });
   }
 }

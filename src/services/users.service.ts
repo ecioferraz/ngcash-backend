@@ -1,6 +1,5 @@
 import {
-  HttpException,
-  HttpStatus,
+  ConflictException,
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
@@ -13,7 +12,7 @@ import PrismaService from './prisma.service';
 @Injectable()
 export default class UsersService {
   constructor(
-    private accountService: AccountsService,
+    private accountsService: AccountsService,
     private prisma: PrismaService,
     private passwordProvider: PasswordProvider,
   ) {}
@@ -22,11 +21,9 @@ export default class UsersService {
     const { id } = user;
 
     const userFound: UserWithoutPassword | null =
-      await this.prisma.user.findUnique({
-        where: { id },
-      });
+      await this.prisma.user.findUnique({ where: { id } });
 
-    if (!userFound) throw new NotFoundException();
+    if (!userFound) throw new NotFoundException('User not found');
 
     delete userFound.password;
 
@@ -42,13 +39,11 @@ export default class UsersService {
 
     const userExists = await this.findOne({ username });
 
-    if (userExists) {
-      throw new HttpException('User already exists', HttpStatus.CONFLICT);
-    }
+    if (userExists) throw new ConflictException('User already exists');
 
     const hashedPassword = await this.passwordProvider.hashPassword(password);
 
-    const { id: accountId } = await this.accountService.create();
+    const { id: accountId } = await this.accountsService.create();
 
     const newUser: UserWithoutPassword = await this.prisma.user.create({
       data: { username, password: hashedPassword, accountId },
@@ -66,6 +61,8 @@ export default class UsersService {
   }
 
   async delete(user: Prisma.UserWhereUniqueInput) {
-    return this.prisma.user.delete({ where: user });
+    await this.prisma.user.delete({ where: user }).catch(() => {
+      throw new NotFoundException('User not found');
+    });
   }
 }
