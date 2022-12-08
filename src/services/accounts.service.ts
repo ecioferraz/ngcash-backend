@@ -44,6 +44,10 @@ export default class AccountsService {
     return account?.balance;
   }
 
+  // async creditAccount(value) {
+  //   await this.prisma.account.
+  // }
+
   async delete(id: Account['id']) {
     return this.prisma.account.delete({ where: { id } }).catch(() => {
       throw new NotFoundException('Account not found');

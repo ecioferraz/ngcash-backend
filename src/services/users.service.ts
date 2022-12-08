@@ -54,6 +54,13 @@ export default class UsersService {
     return newUser as User;
   }
 
+  async getAccountId(user: Prisma.UserWhereUniqueInput) {
+    return this.prisma.user.findUnique({
+      where: user,
+      select: { accountId: true },
+    });
+  }
+
   async read() {
     return this.prisma.user.findMany({
       select: { id: true, username: true, accountId: true },
