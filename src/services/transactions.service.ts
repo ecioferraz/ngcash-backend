@@ -1,58 +1,66 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { Prisma, Transaction, User } from '@prisma/client';
+import { Prisma, User } from '@prisma/client';
+import TransactionInput from 'src/interfaces/TransactionInput';
 import AccountsService from './accounts.service';
 import PrismaService from './prisma.service';
 import UsersService from './users.service';
 
-interface TransactionInput {
-  creditedAccount: User['username'];
-  debitedAccount: User['username'];
-  value: Transaction['value'];
-}
-
 @Injectable()
 export default class TransactionsService {
   constructor(
-    private accountService: AccountsService,
+    private accountsService: AccountsService,
     private prisma: PrismaService,
     private usersService: UsersService,
   ) {}
 
   // probably refactor everything. may need to get whole user infos in order to make transactions
 
-  private async getAccountIds(usernames: User['username'][]) {
+  async getAccountIds(usernames: User['username'][]) {
     const accountIds = await Promise.all(
       usernames.map(async (username) =>
         this.usersService.getAccountId({ username }),
       ),
     );
 
-    if (accountIds.length !== 2)
+    if (accountIds.includes(null)) {
       throw new NotFoundException(
-        'One of the users could not be found, try again.',
+        'One of the users could not be found, try again',
       );
+    }
 
     return accountIds;
   }
 
-  private async create(transaction: Prisma.TransactionUncheckedCreateInput) {
-    await this.prisma.transaction.create({ data: transaction });
+  private async create(data: Prisma.TransactionUncheckedCreateInput) {
+    return this.prisma.transaction.create({ data });
   }
 
-  async cashIn(transaction: TransactionInput) {
-    const { creditedAccount, debitedAccount, value } = transaction;
+  async read() {
+    return this.prisma.transaction.findMany();
+  }
 
-    const [creditedUser, debitedUser] = await this.getAccountIds([
-      creditedAccount,
-      debitedAccount,
-    ]);
+  async makeTransaction(transactionInput: TransactionInput) {
+    const { creditedAccountId, debitedAccountId, debitedUsername, value } =
+      transactionInput;
 
-    await this.create({
-      creditedAccountId: creditedUser?.accountId as string,
-      debitedAccountId: debitedUser?.accountId as string,
+    await this.accountsService.checkAvailableBalance(
+      debitedAccountId,
+      debitedUsername,
+      value,
+    );
+
+    await this.accountsService.debitAccount({ id: debitedAccountId, value });
+
+    await this.accountsService.creditAccount({ id: creditedAccountId, value });
+
+    return this.create({
+      creditedAccountId: creditedAccountId,
+      debitedAccountId: debitedAccountId,
       value,
     });
+  }
 
-    // await this.accountService.
+  async delete() {
+    return await this.prisma.transaction.deleteMany();
   }
 }

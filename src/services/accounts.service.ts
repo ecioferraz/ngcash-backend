@@ -4,13 +4,31 @@ import {
   NotFoundException,
   UnauthorizedException,
 } from '@nestjs/common';
-import { Account } from '@prisma/client';
+import { Account, Transaction, User } from '@prisma/client';
 import UserMatch from 'src/interfaces/UserMatch';
 import PrismaService from './prisma.service';
 
+interface CreditDebitInput {
+  id: string;
+  value: Transaction['value'];
+}
 @Injectable()
 export default class AccountsService {
   constructor(private prisma: PrismaService) {}
+
+  async checkAvailableBalance(
+    accountId: Account['id'],
+    username: User['username'],
+    value: Account['balance'],
+  ) {
+    const balance = await this.readBalance({ accountId, username });
+
+    if (balance < value) {
+      throw new BadRequestException(
+        "You don't have enough balance to complete this transaction",
+      );
+    }
+  }
 
   async create() {
     return this.prisma.account.create({ data: {} });
@@ -20,7 +38,7 @@ export default class AccountsService {
     return this.prisma.account.findMany();
   }
 
-  async readOne(id: string) {
+  async readOne(id: Account['id']) {
     const account = await this.prisma.account.findUnique({ where: { id } });
 
     if (!account) throw new NotFoundException('Account not found');
@@ -29,7 +47,7 @@ export default class AccountsService {
   }
 
   async readBalance(user: UserMatch) {
-    const { id, username } = user;
+    const { accountId: id, username } = user;
 
     if (!id || !username) {
       throw new BadRequestException('Missing account id or username');
@@ -44,9 +62,19 @@ export default class AccountsService {
     return account?.balance;
   }
 
-  // async creditAccount(value) {
-  //   await this.prisma.account.
-  // }
+  async creditAccount({ id, value }: CreditDebitInput) {
+    return this.prisma.account.update({
+      data: { balance: { increment: value } },
+      where: { id },
+    });
+  }
+
+  async debitAccount({ id, value }: CreditDebitInput) {
+    return this.prisma.account.update({
+      data: { balance: { decrement: value } },
+      where: { id },
+    });
+  }
 
   async delete(id: Account['id']) {
     return this.prisma.account.delete({ where: { id } }).catch(() => {
