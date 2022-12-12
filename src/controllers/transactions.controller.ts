@@ -7,9 +7,11 @@ import {
   Post,
   UseGuards,
 } from '@nestjs/common';
-import { Transaction, User } from '@prisma/client';
+import { Account, Transaction, User } from '@prisma/client';
 import JwtAuthGuard from 'src/guards/jwt-auth.guard';
 import TransactionsService from 'src/services/transactions.service';
+import CashInCashOut from 'src/types/CashInCashOut';
+import OrderBy from 'src/types/OrderBy';
 
 interface TransactionBody {
   creditedUsername: User['username'];
@@ -17,14 +19,18 @@ interface TransactionBody {
   value: Transaction['value'];
 }
 
-// match transactions with creditedAccountId and debitedAccountId for cash-in and cash-out respectively
+interface GetTransactionInput {
+  accountId: Account['id'];
+  orderBy: OrderBy;
+  type: CashInCashOut;
+}
 
 @UseGuards(JwtAuthGuard)
 @Controller('transactions')
 export default class TransactionsController {
   constructor(private readonly transactionsService: TransactionsService) {}
 
-  @Post('/cash-in')
+  @Post()
   async create(@Body() transactionInput: TransactionBody) {
     const { creditedUsername, debitedUsername, value } = transactionInput;
 
@@ -46,12 +52,14 @@ export default class TransactionsController {
     });
   }
 
-  @Get('/cash-in')
-  async read() {
-    return this.transactionsService.read();
+  @Get()
+  async read(@Body() getTransactionInput: GetTransactionInput) {
+    const { accountId, orderBy, type } = getTransactionInput;
+
+    return this.transactionsService.read(accountId, orderBy, type);
   }
 
-  @Delete('/cash-in')
+  @Delete()
   async delete() {
     return this.transactionsService.delete();
   }

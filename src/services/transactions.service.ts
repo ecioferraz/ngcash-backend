@@ -1,6 +1,8 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { Prisma, User } from '@prisma/client';
+import { Account, Prisma, User } from '@prisma/client';
 import TransactionInput from 'src/interfaces/TransactionInput';
+import CashInCashOut from 'src/types/CashInCashOut';
+import OrderBy from 'src/types/OrderBy';
 import AccountsService from './accounts.service';
 import PrismaService from './prisma.service';
 import UsersService from './users.service';
@@ -35,8 +37,37 @@ export default class TransactionsService {
     return this.prisma.transaction.create({ data });
   }
 
-  async read() {
-    return this.prisma.transaction.findMany();
+  private async getCreditedTransactions(id: Account['id'], orderBy: OrderBy) {
+    return this.prisma.transaction.findMany({
+      where: { creditedAccountId: id },
+      orderBy: { createdAt: orderBy },
+    });
+  }
+
+  private async getDebitedTransactions(id: Account['id'], orderBy: OrderBy) {
+    return this.prisma.transaction.findMany({
+      where: { debitedAccountId: id },
+      orderBy: { createdAt: orderBy },
+    });
+  }
+
+  private async getAllTransactions(id: Account['id'], orderBy: OrderBy) {
+    return this.prisma.transaction.findMany({
+      where: { OR: [{ creditedAccountId: id }, { debitedAccountId: id }] },
+      orderBy: { createdAt: orderBy },
+    });
+  }
+
+  async read(
+    id: Account['id'],
+    orderBy: OrderBy = 'desc',
+    type: CashInCashOut = 'all',
+  ) {
+    if (type === 'cash-in') return this.getCreditedTransactions(id, orderBy);
+
+    if (type === 'cash-out') return this.getDebitedTransactions(id, orderBy);
+
+    return this.getAllTransactions(id, orderBy);
   }
 
   async makeTransaction(transactionInput: TransactionInput) {
