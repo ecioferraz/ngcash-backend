@@ -1,5 +1,5 @@
 interface UserMatch {
-  id: string;
+  accountId: string;
   username: string;
 }
 
