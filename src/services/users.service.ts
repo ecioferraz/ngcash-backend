@@ -28,10 +28,14 @@ export default class UsersService {
     return userFound as User;
   }
 
+  async findOne(user: Prisma.UserWhereUniqueInput) {
+    return this.prisma.user.findUnique({ where: user });
+  }
+
   async create(user: Prisma.UserCreateWithoutAccountInput) {
     const { password, username } = user;
 
-    const userExists = await this.readOne({ username });
+    const userExists = await this.findOne({ username });
 
     if (userExists) throw new ConflictException('User already exists');
 

@@ -22,7 +22,7 @@ export default class AuthService {
     const { password, username } = user;
 
     const userFound: UserWithoutPassword | null =
-      await this.usersService.readOne({ username });
+      await this.usersService.findOne({ username });
 
     const isPasswordValid = await this.validatePassword(
       password,
