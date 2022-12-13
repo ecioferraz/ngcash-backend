@@ -16,20 +16,6 @@ interface CreditDebitInput {
 export default class AccountsService {
   constructor(private prisma: PrismaService) {}
 
-  async checkAvailableBalance(
-    accountId: Account['id'],
-    username: User['username'],
-    value: Account['balance'],
-  ) {
-    const balance = await this.readBalance({ accountId, username });
-
-    if (balance < value) {
-      throw new BadRequestException(
-        "You don't have enough balance to complete this transaction",
-      );
-    }
-  }
-
   async create() {
     return this.prisma.account.create({ data: {} });
   }
@@ -46,7 +32,21 @@ export default class AccountsService {
     return account;
   }
 
-  async readBalance(user: UserMatch) {
+  async checkAvailableBalance(
+    accountId: Account['id'],
+    username: User['username'],
+    value: Account['balance'],
+  ) {
+    const { balance } = await this.matchUser({ accountId, username });
+
+    if (balance < value) {
+      throw new BadRequestException(
+        "You don't have enough balance to complete this transaction",
+      );
+    }
+  }
+
+  async matchUser(user: UserMatch) {
     const { accountId: id, username } = user;
 
     if (!id || !username) {
@@ -59,7 +59,11 @@ export default class AccountsService {
 
     if (!account) throw new UnauthorizedException('Unauthorized user');
 
-    return account?.balance;
+    return account;
+  }
+
+  async readBalance(user: UserMatch) {
+    return (await this.matchUser(user)).balance;
   }
 
   async creditAccount({ id, value }: CreditDebitInput) {

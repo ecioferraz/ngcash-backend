@@ -1,7 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { Account, Prisma, User } from '@prisma/client';
+import GetTransactionsInput from 'src/interfaces/GetTransactionsInput';
 import TransactionInput from 'src/interfaces/TransactionInput';
-import CashInCashOut from 'src/types/CashInCashOut';
 import OrderBy from 'src/types/OrderBy';
 import AccountsService from './accounts.service';
 import PrismaService from './prisma.service';
@@ -14,8 +14,6 @@ export default class TransactionsService {
     private prisma: PrismaService,
     private usersService: UsersService,
   ) {}
-
-  // probably refactor everything. may need to get whole user infos in order to make transactions
 
   async getAccountIds(usernames: User['username'][]) {
     const accountIds = await Promise.all(
@@ -58,16 +56,23 @@ export default class TransactionsService {
     });
   }
 
-  async read(
-    id: Account['id'],
-    orderBy: OrderBy = 'desc',
-    type: CashInCashOut = 'all',
-  ) {
-    if (type === 'cash-in') return this.getCreditedTransactions(id, orderBy);
+  async read({
+    accountId,
+    orderBy = 'desc',
+    type = 'all',
+    username,
+  }: GetTransactionsInput) {
+    await this.accountsService.matchUser({ accountId, username });
 
-    if (type === 'cash-out') return this.getDebitedTransactions(id, orderBy);
+    if (type === 'cash-in') {
+      return this.getCreditedTransactions(accountId, orderBy);
+    }
 
-    return this.getAllTransactions(id, orderBy);
+    if (type === 'cash-out') {
+      return this.getDebitedTransactions(accountId, orderBy);
+    }
+
+    return this.getAllTransactions(accountId, orderBy);
   }
 
   async makeTransaction(transactionInput: TransactionInput) {

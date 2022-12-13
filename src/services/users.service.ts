@@ -4,8 +4,8 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { Prisma, User } from '@prisma/client';
-import UserWithoutPassword from 'src/interfaces/UserWithoutPassword';
-import PasswordProvider from 'src/providers/PasswordProvider';
+import UserWithoutPassword from '../interfaces/UserWithoutPassword';
+import PasswordProvider from '../providers/PasswordProvider';
 import AccountsService from './accounts.service';
 import PrismaService from './prisma.service';
 
@@ -18,10 +18,8 @@ export default class UsersService {
   ) {}
 
   async readOne(user: Prisma.UserWhereUniqueInput) {
-    const { id } = user;
-
     const userFound: UserWithoutPassword | null =
-      await this.prisma.user.findUnique({ where: { id } });
+      await this.prisma.user.findUnique({ where: user });
 
     if (!userFound) throw new NotFoundException('User not found');
 
@@ -30,14 +28,10 @@ export default class UsersService {
     return userFound as User;
   }
 
-  async findOne(user: Prisma.UserWhereUniqueInput) {
-    return this.prisma.user.findUnique({ where: user });
-  }
-
   async create(user: Prisma.UserCreateWithoutAccountInput) {
     const { password, username } = user;
 
-    const userExists = await this.findOne({ username });
+    const userExists = await this.readOne({ username });
 
     if (userExists) throw new ConflictException('User already exists');
 

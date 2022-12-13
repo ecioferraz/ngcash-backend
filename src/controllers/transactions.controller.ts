@@ -7,22 +7,15 @@ import {
   Post,
   UseGuards,
 } from '@nestjs/common';
-import { Account, Transaction, User } from '@prisma/client';
+import { Transaction, User } from '@prisma/client';
 import JwtAuthGuard from 'src/guards/jwt-auth.guard';
+import GetTransactionsInput from 'src/interfaces/GetTransactionsInput';
 import TransactionsService from 'src/services/transactions.service';
-import CashInCashOut from 'src/types/CashInCashOut';
-import OrderBy from 'src/types/OrderBy';
 
 interface TransactionBody {
   creditedUsername: User['username'];
   debitedUsername: User['username'];
   value: Transaction['value'];
-}
-
-interface GetTransactionInput {
-  accountId: Account['id'];
-  orderBy: OrderBy;
-  type: CashInCashOut;
 }
 
 @UseGuards(JwtAuthGuard)
@@ -53,10 +46,8 @@ export default class TransactionsController {
   }
 
   @Get()
-  async read(@Body() getTransactionInput: GetTransactionInput) {
-    const { accountId, orderBy, type } = getTransactionInput;
-
-    return this.transactionsService.read(accountId, orderBy, type);
+  async read(@Body() getTransactionsInput: GetTransactionsInput) {
+    return this.transactionsService.read(getTransactionsInput);
   }
 
   @Delete()
