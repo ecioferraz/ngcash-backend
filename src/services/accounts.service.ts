@@ -9,7 +9,7 @@ import UserMatch from 'src/interfaces/UserMatch';
 import PrismaService from './prisma.service';
 
 interface CreditDebitInput {
-  id: string;
+  id: Account['id'];
   value: Transaction['value'];
 }
 @Injectable()
