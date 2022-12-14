@@ -2,6 +2,7 @@ import { Account, Prisma, Transaction, User } from '@prisma/client';
 import TransactionInput from '../../../interfaces/TransactionInput';
 import UserMatch from '../../../interfaces/UserMatch';
 import GetTransactionsInput from '../../../interfaces/GetTransactionsInput';
+import UserWithoutPassword from 'src/interfaces/UserWithoutPassword';
 
 export const userWithPasswordMock: User = {
   id: 'userIdTest',
@@ -10,7 +11,7 @@ export const userWithPasswordMock: User = {
   accountId: 'accountIdTest',
 };
 
-export const userWithoutPasswordMock: Prisma.UserWhereUniqueInput = {
+export const userWithoutPasswordMock: UserWithoutPassword = {
   id: 'userIdTest',
   accountId: 'accountIdTest',
   username: 'usernameTest',
