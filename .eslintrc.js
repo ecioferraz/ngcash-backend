@@ -7,7 +7,6 @@ module.exports = {
     },
     "plugins": [
       "@typescript-eslint/eslint-plugin",
-      "jest",
     ],
     "extends": [
         "plugin:@typescript-eslint/recommended",
@@ -35,6 +34,6 @@ module.exports = {
           "skipComments": true,
         }
       ],
-      "complexity": ["error", 5]
-    }
+      "complexity": ["error", 5],
+    },
 }
