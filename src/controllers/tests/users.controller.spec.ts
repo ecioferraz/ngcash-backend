@@ -1,11 +1,11 @@
 import { Test } from '@nestjs/testing';
 import { DeepMockProxy, mockDeep } from 'jest-mock-extended';
-import { userWithoutPasswordMock } from '../../services/tests/mocks';
+import UsersController from '../users.controller';
 import PasswordProvider from '../../providers/PasswordProvider';
 import AccountsService from '../../services/accounts.service';
 import PrismaService from '../../services/prisma.service';
 import UsersService from '../../services/users.service';
-import UsersController from '../users.controller';
+import { userWithoutPasswordMock } from '../../services/tests/mocks';
 
 describe('UsersController', () => {
   let usersController: UsersController;
