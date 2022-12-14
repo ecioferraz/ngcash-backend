@@ -39,7 +39,7 @@ export default class AccountsService {
   ) {
     const { balance } = await this.matchUser({ accountId, username });
 
-    if (balance < value) {
+    if (+balance < +value) {
       throw new BadRequestException(
         "You don't have enough balance to complete this transaction",
       );
