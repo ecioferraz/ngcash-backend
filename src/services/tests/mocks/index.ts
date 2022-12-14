@@ -2,7 +2,7 @@ import { Account, Prisma, Transaction, User } from '@prisma/client';
 import TransactionInput from '../../../interfaces/TransactionInput';
 import UserMatch from '../../../interfaces/UserMatch';
 import GetTransactionsInput from '../../../interfaces/GetTransactionsInput';
-import UserWithoutPassword from 'src/interfaces/UserWithoutPassword';
+import UserWithoutPassword from '../../../interfaces/UserWithoutPassword';
 
 export const userWithPasswordMock: User = {
   id: 'userIdTest',
