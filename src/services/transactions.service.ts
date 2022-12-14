@@ -1,8 +1,8 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { Account, Prisma, User } from '@prisma/client';
-import GetTransactionsInput from 'src/interfaces/GetTransactionsInput';
-import TransactionInput from 'src/interfaces/TransactionInput';
-import OrderBy from 'src/types/OrderBy';
+import GetTransactionsInput from '../interfaces/GetTransactionsInput';
+import TransactionInput from '../interfaces/TransactionInput';
+import OrderBy from '../types/OrderBy';
 import AccountsService from './accounts.service';
 import PrismaService from './prisma.service';
 import UsersService from './users.service';

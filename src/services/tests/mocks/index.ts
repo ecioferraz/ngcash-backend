@@ -1,6 +1,6 @@
 import { Account, Prisma, Transaction, User } from '@prisma/client';
-import TransactionInput from 'src/interfaces/TransactionInput';
-import UserMatch from 'src/interfaces/UserMatch';
+import TransactionInput from '../../../interfaces/TransactionInput';
+import UserMatch from '../../../interfaces/UserMatch';
 import GetTransactionsInput from '../../../interfaces/GetTransactionsInput';
 
 export const userWithPasswordMock: User = {

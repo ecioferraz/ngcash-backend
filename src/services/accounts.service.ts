@@ -5,7 +5,7 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 import { Account, Transaction, User } from '@prisma/client';
-import UserMatch from 'src/interfaces/UserMatch';
+import UserMatch from '../interfaces/UserMatch';
 import PrismaService from './prisma.service';
 
 interface CreditDebitInput {

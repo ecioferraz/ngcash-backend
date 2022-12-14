@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { Prisma, User } from '@prisma/client';
-import UserWithoutPassword from 'src/interfaces/UserWithoutPassword';
-import PasswordProvider from 'src/providers/PasswordProvider';
-import { UserType } from 'src/schema/UserSchema';
+import UserWithoutPassword from '../interfaces/UserWithoutPassword';
+import PasswordProvider from '../providers/PasswordProvider';
+import { UserType } from '../schema/UserSchema';
 import UsersService from './users.service';
 import { JwtService } from '@nestjs/jwt';
 

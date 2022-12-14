@@ -1,6 +1,6 @@
 import { Controller, Delete, Get, Param } from '@nestjs/common';
 import { User } from '@prisma/client';
-import UsersService from 'src/services/users.service';
+import UsersService from '../services/users.service';
 
 @Controller('users')
 export default class UsersController {

@@ -2,12 +2,12 @@ import { Module } from '@nestjs/common';
 import { JwtModule } from '@nestjs/jwt';
 import { readFileSync } from 'fs';
 import { PassportModule } from '@nestjs/passport';
-import AuthController from 'src/controllers/auth.controller';
-import PasswordProvider from 'src/providers/PasswordProvider';
-import AuthService from 'src/services/auth.service';
-import LocalStrategy from 'src/strategies/local.strategy';
+import AuthController from '../controllers/auth.controller';
+import PasswordProvider from '../providers/PasswordProvider';
+import AuthService from '../services/auth.service';
+import LocalStrategy from '../strategies/local.strategy';
 import UsersModule from './users.module';
-import JwtStrategy from 'src/strategies/jwt.strategy';
+import JwtStrategy from '../strategies/jwt.strategy';
 
 @Module({
   imports: [

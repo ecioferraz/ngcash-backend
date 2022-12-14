@@ -1,10 +1,10 @@
 import { Module } from '@nestjs/common';
-import TransactionsController from 'src/controllers/transactions.controller';
-import PasswordProvider from 'src/providers/PasswordProvider';
-import AccountsService from 'src/services/accounts.service';
-import PrismaService from 'src/services/prisma.service';
-import TransactionsService from 'src/services/transactions.service';
-import UsersService from 'src/services/users.service';
+import TransactionsController from '../controllers/transactions.controller';
+import PasswordProvider from '../providers/PasswordProvider';
+import AccountsService from '../services/accounts.service';
+import PrismaService from '../services/prisma.service';
+import TransactionsService from '../services/transactions.service';
+import UsersService from '../services/users.service';
 
 @Module({
   providers: [

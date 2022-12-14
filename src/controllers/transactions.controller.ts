@@ -8,9 +8,9 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { Transaction, User } from '@prisma/client';
-import JwtAuthGuard from 'src/guards/jwt-auth.guard';
-import GetTransactionsInput from 'src/interfaces/GetTransactionsInput';
-import TransactionsService from 'src/services/transactions.service';
+import JwtAuthGuard from '../guards/jwt-auth.guard';
+import GetTransactionsInput from '../interfaces/GetTransactionsInput';
+import TransactionsService from '../services/transactions.service';
 
 interface TransactionBody {
   creditedUsername: User['username'];

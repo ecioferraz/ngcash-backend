@@ -1,6 +1,6 @@
 import { Account, User } from '@prisma/client';
-import CashInCashOut from 'src/types/CashInCashOut';
-import OrderBy from 'src/types/OrderBy';
+import CashInCashOut from '../types/CashInCashOut';
+import OrderBy from '../types/OrderBy';
 
 interface GetTransactionsInput {
   accountId: Account['id'];
