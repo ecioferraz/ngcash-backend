@@ -5,12 +5,12 @@ import PasswordProvider from '../../providers/PasswordProvider';
 import AccountsService from '../accounts.service';
 import { DeepMockProxy, mockDeep } from 'jest-mock-extended';
 import {
-  newAccountMock,
+  accountMock,
   userCreateWithoutAccountInputMock,
-  userWWithoutPasswordMock,
-  userWWithPasswordMock,
+  userWithoutPasswordMock,
+  userWithPasswordMock,
 } from './mocks';
-import { PrismaClient } from '@prisma/client';
+import { PrismaClient, User } from '@prisma/client';
 import { ConflictException, NotFoundException } from '@nestjs/common';
 
 describe('UsersService', () => {
@@ -34,10 +34,12 @@ describe('UsersService', () => {
     prismaService = module.get(PrismaService);
   });
 
+  const { accountId, id, username } = userWithoutPasswordMock;
+
   describe('create', () => {
     beforeEach(() => {
-      prismaService.user.create.mockResolvedValue(userWWithPasswordMock);
-      prismaService.account.create.mockResolvedValue(newAccountMock);
+      prismaService.user.create.mockResolvedValue(userWithPasswordMock);
+      prismaService.account.create.mockResolvedValue(accountMock);
     });
 
     it('should return a newly created user', async () => {
@@ -45,13 +47,11 @@ describe('UsersService', () => {
 
       expect(
         await usersService.create(userCreateWithoutAccountInputMock),
-      ).toStrictEqual(userWWithoutPasswordMock);
+      ).toStrictEqual(userWithoutPasswordMock);
     });
 
     it('should throw a ConflictException', async () => {
-      prismaService.user.findUnique.mockResolvedValueOnce(
-        userWWithPasswordMock,
-      );
+      prismaService.user.findUnique.mockResolvedValueOnce(userWithPasswordMock);
 
       await expect(
         usersService.create(userCreateWithoutAccountInputMock),
@@ -61,13 +61,11 @@ describe('UsersService', () => {
 
   describe('readOne', () => {
     it('should return a user without their password', async () => {
-      prismaService.user.findUnique.mockResolvedValueOnce(
-        userWWithPasswordMock,
-      );
+      prismaService.user.findUnique.mockResolvedValueOnce(userWithPasswordMock);
 
-      expect(
-        await usersService.readOne({ id: userWWithoutPasswordMock.id }),
-      ).toStrictEqual(userWWithoutPasswordMock);
+      expect(await usersService.readOne({ id })).toStrictEqual(
+        userWithoutPasswordMock,
+      );
     });
 
     it('should throw an NotFoundException', async () => {
@@ -76,6 +74,28 @@ describe('UsersService', () => {
       await expect(
         usersService.readOne({ id: 'invalidId' }),
       ).rejects.toBeInstanceOf(NotFoundException);
+    });
+  });
+
+  describe('getAccountId', () => {
+    it("should return a required user's account", async () => {
+      prismaService.user.findUnique.mockResolvedValueOnce({
+        accountId,
+      } as User);
+
+      expect(await usersService.getAccountId({ username })).toStrictEqual({
+        accountId,
+      });
+    });
+  });
+
+  describe('read', () => {
+    it('should return all registered users', async () => {
+      prismaService.user.findMany.mockResolvedValueOnce([userWithPasswordMock]);
+
+      expect(await usersService.read()).toStrictEqual([
+        userWithoutPasswordMock,
+      ]);
     });
   });
 });
