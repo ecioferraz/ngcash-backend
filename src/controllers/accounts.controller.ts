@@ -8,9 +8,9 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { Account } from '@prisma/client';
-import JwtAuthGuard from 'src/guards/jwt-auth.guard';
-import UserMatch from 'src/interfaces/UserMatch';
-import AccountsService from 'src/services/accounts.service';
+import JwtAuthGuard from '../guards/jwt-auth.guard';
+import UserMatch from '../interfaces/UserMatch';
+import AccountsService from '../services/accounts.service';
 
 @UseGuards(JwtAuthGuard)
 @Controller('accounts')
@@ -23,7 +23,7 @@ export default class AccountsController {
   }
 
   @Get()
-  async getAll() {
+  async read() {
     return this.accountsService.read();
   }
 
