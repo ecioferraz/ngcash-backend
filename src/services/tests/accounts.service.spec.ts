@@ -1,15 +1,15 @@
+import { BadRequestException, NotFoundException } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
-import PrismaService from '../prisma.service';
-import AccountsService from '../accounts.service';
+import { Prisma, PrismaClient } from '@prisma/client';
 import { DeepMockProxy, mockDeep } from 'jest-mock-extended';
+import AccountsService from '../accounts.service';
+import PrismaService from '../prisma.service';
+import UserMatch from '../../interfaces/UserMatch';
 import {
   accountMock,
   creditedAccountMock,
   userWithoutPasswordMock,
 } from './mocks';
-import { Prisma, PrismaClient } from '@prisma/client';
-import { BadRequestException, NotFoundException } from '@nestjs/common';
-import UserMatch from 'src/interfaces/UserMatch';
 
 describe('AccountsService', () => {
   let accountsService: AccountsService;
@@ -51,7 +51,7 @@ describe('AccountsService', () => {
       prismaService.account.findFirst.mockResolvedValueOnce(accountMock);
 
       expect(
-        await accountsService.matchUser({ accountId: id, username }),
+        await accountsService.matchUser({ accountId: id, username } as UserMatch),
       ).toStrictEqual(accountMock);
     });
 
@@ -71,7 +71,7 @@ describe('AccountsService', () => {
       await expect(
         accountsService.checkAvailableBalance(
           id,
-          username,
+          username as UserMatch['username'],
           new Prisma.Decimal(1000),
         ),
       ).rejects.toBeInstanceOf(BadRequestException);
@@ -83,7 +83,7 @@ describe('AccountsService', () => {
       prismaService.account.findFirst.mockResolvedValueOnce(accountMock);
 
       expect(
-        await accountsService.readBalance({ accountId: id, username }),
+        await accountsService.readBalance({ accountId: id, username } as UserMatch),
       ).toStrictEqual(balance);
     });
   });
