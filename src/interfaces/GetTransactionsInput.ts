@@ -4,8 +4,8 @@ import OrderBy from 'src/types/OrderBy';
 
 interface GetTransactionsInput {
   accountId: Account['id'];
-  orderBy: OrderBy;
-  type: CashInCashOut;
+  orderBy?: OrderBy;
+  type?: CashInCashOut;
   username: User['username'];
 }
 
