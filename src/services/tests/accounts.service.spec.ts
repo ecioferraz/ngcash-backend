@@ -7,7 +7,7 @@ import {
   creditedAccountMock,
   userWithoutPasswordMock,
 } from './mocks';
-import { Prisma, PrismaClient, User } from '@prisma/client';
+import { Prisma, PrismaClient } from '@prisma/client';
 import { BadRequestException, NotFoundException } from '@nestjs/common';
 import UserMatch from 'src/interfaces/UserMatch';
 
@@ -27,7 +27,7 @@ describe('AccountsService', () => {
     prismaService = module.get(PrismaService);
   });
 
-  const { accountId, username } = userWithoutPasswordMock;
+  const { username } = userWithoutPasswordMock;
   const { balance, id } = accountMock;
 
   describe('readOne', () => {
@@ -37,7 +37,7 @@ describe('AccountsService', () => {
       expect(await accountsService.readOne(id)).toStrictEqual(accountMock);
     });
 
-    it('should throw an NotFoundException', async () => {
+    it('should throw a NotFoundException when id is invalid', async () => {
       prismaService.account.findUnique.mockResolvedValueOnce(null);
 
       await expect(accountsService.readOne('invalidId')).rejects.toBeInstanceOf(
