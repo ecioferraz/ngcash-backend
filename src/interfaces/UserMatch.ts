@@ -1,6 +1,8 @@
+import { User } from '@prisma/client';
+
 interface UserMatch {
-  accountId: string;
-  username: string;
+  accountId: User['accountId'];
+  username: User['username'];
 }
 
 export default UserMatch;

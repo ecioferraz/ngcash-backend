@@ -5,7 +5,7 @@ import {
   Post,
   UseGuards,
 } from '@nestjs/common';
-import { User } from '@prisma/client';
+import LoginBody from '../interfaces/LoginBody';
 import LocalAuthGuard from '../guards/local-auth.guard';
 import { UserSchema, UserType } from '../schema/UserSchema';
 import AuthService from '../services/auth.service';
@@ -16,7 +16,7 @@ export default class AuthController {
 
   @UseGuards(LocalAuthGuard)
   @Post('/login')
-  async login(@Body() user: User) {
+  async login(@Body() user: LoginBody) {
     return this.authService.login(user);
   }
 
