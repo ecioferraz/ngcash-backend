@@ -7,7 +7,7 @@ import UserWithoutPassword from 'src/interfaces/UserWithoutPassword';
 export const userWithPasswordMock: User = {
   id: 'userIdTest',
   username: 'usernameTest',
-  password: 'passwordTest',
+  password: 'passwordT3st',
   accountId: 'accountIdTest',
 };
 
@@ -19,7 +19,7 @@ export const userWithoutPasswordMock: UserWithoutPassword = {
 
 export const userCreateWithoutAccountInputMock: Prisma.UserCreateWithoutAccountInput =
   {
-    password: 'passwordTest',
+    password: 'passwordT3st',
     username: 'usernameTest2',
   };
 
