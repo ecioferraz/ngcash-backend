@@ -1,17 +1,17 @@
+import { ConflictException, NotFoundException } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
+import { PrismaClient, User } from '@prisma/client';
+import { DeepMockProxy, mockDeep } from 'jest-mock-extended';
+import AccountsService from '../accounts.service';
 import PrismaService from '../prisma.service';
 import UsersService from '../users.service';
 import PasswordProvider from '../../providers/PasswordProvider';
-import AccountsService from '../accounts.service';
-import { DeepMockProxy, mockDeep } from 'jest-mock-extended';
 import {
   accountMock,
   userCreateWithoutAccountInputMock,
   userWithoutPasswordMock,
   userWithPasswordMock,
 } from './mocks';
-import { PrismaClient, User } from '@prisma/client';
-import { ConflictException, NotFoundException } from '@nestjs/common';
 
 describe('UsersService', () => {
   let usersService: UsersService;
