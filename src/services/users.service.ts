@@ -25,7 +25,7 @@ export default class UsersService {
 
     delete userFound.password;
 
-    return userFound as User;
+    return userFound;
   }
 
   async findOne(user: Prisma.UserWhereUniqueInput) {
@@ -49,7 +49,7 @@ export default class UsersService {
 
     delete newUser.password;
 
-    return newUser as User;
+    return newUser;
   }
 
   async getAccountId(user: Prisma.UserWhereUniqueInput) {
