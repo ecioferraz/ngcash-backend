@@ -7,16 +7,10 @@ import {
   Post,
   UseGuards,
 } from '@nestjs/common';
-import { Transaction, User } from '@prisma/client';
+import TransactionBody from '../interfaces/TransactionBody';
 import JwtAuthGuard from '../guards/jwt-auth.guard';
 import GetTransactionsInput from '../interfaces/GetTransactionsInput';
 import TransactionsService from '../services/transactions.service';
-
-interface TransactionBody {
-  creditedUsername: User['username'];
-  debitedUsername: User['username'];
-  value: Transaction['value'];
-}
 
 @UseGuards(JwtAuthGuard)
 @Controller('transactions')
