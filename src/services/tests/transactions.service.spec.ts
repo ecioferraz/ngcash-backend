@@ -15,7 +15,7 @@ import {
   readCreditedTransactionsInputMock,
   readDebitedTransactionsInputMock,
   transactionsMock,
-  userMatch,
+  userMatchMock,
   userWithoutPasswordMock,
 } from './mocks';
 
@@ -82,7 +82,7 @@ describe('TransactionsService', () => {
         );
         prismaService.account.findFirst.mockResolvedValueOnce(accountMock);
 
-        expect(await transactionsService.read(userMatch)).toStrictEqual(
+        expect(await transactionsService.read(userMatchMock)).toStrictEqual(
           transactionsMock,
         );
       });

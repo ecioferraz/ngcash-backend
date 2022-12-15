@@ -6,7 +6,7 @@ import PrismaService from '../../services/prisma.service';
 import {
   accountMock,
   accountMock2,
-  userMatch,
+  userMatchMock,
 } from '../../services/tests/mocks';
 
 describe('AccountsController', () => {
@@ -51,7 +51,7 @@ describe('AccountsController', () => {
     it("should return a user's balance", async () => {
       accountsService.readBalance.mockResolvedValue(balance);
 
-      expect(await accountsController.readBalance(userMatch)).toStrictEqual(
+      expect(await accountsController.readBalance(userMatchMock)).toStrictEqual(
         balance,
       );
     });
