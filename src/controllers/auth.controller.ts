@@ -7,7 +7,7 @@ import {
 } from '@nestjs/common';
 import LoginBody from '../interfaces/LoginBody';
 import LocalAuthGuard from '../guards/local-auth.guard';
-import { UserSchema, UserType } from '../schema/UserSchema';
+import { UserSchema, UserType } from '../schema/User.schema';
 import AuthService from '../services/auth.service';
 
 @Controller()

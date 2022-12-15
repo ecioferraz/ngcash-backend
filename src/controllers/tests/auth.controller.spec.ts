@@ -2,7 +2,7 @@ import { BadRequestException } from '@nestjs/common';
 import { Test } from '@nestjs/testing';
 import { DeepMockProxy, mockDeep } from 'jest-mock-extended';
 import AuthController from '../auth.controller';
-import PasswordProvider from '../../providers/PasswordProvider';
+import PasswordProvider from '../../providers/Password.provider';
 import AuthService from '../../services/auth.service';
 import LocalStrategy from '../../strategies/local.strategy';
 import JwtStrategy from '../../strategies/jwt.strategy';

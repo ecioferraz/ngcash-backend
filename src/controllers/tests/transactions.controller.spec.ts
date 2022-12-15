@@ -5,7 +5,7 @@ import AccountsService from '../../services/accounts.service';
 import PrismaService from '../../services/prisma.service';
 import UsersService from '../../services/users.service';
 import TransactionsService from '../../services/transactions.service';
-import PasswordProvider from '../../providers/PasswordProvider';
+import PasswordProvider from '../../providers/Password.provider';
 import {
   invalidTransactionMock,
   makeTransactionInputMock,

@@ -1,7 +1,7 @@
 import { Test } from '@nestjs/testing';
 import { DeepMockProxy, mockDeep } from 'jest-mock-extended';
 import UsersController from '../users.controller';
-import PasswordProvider from '../../providers/PasswordProvider';
+import PasswordProvider from '../../providers/Password.provider';
 import AccountsService from '../../services/accounts.service';
 import PrismaService from '../../services/prisma.service';
 import UsersService from '../../services/users.service';

@@ -3,9 +3,9 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
-import { Prisma, User } from '@prisma/client';
+import { Prisma } from '@prisma/client';
 import UserWithoutPassword from '../interfaces/UserWithoutPassword';
-import PasswordProvider from '../providers/PasswordProvider';
+import PasswordProvider from '../providers/Password.provider';
 import AccountsService from './accounts.service';
 import PrismaService from './prisma.service';
 

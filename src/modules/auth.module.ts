@@ -3,7 +3,7 @@ import { JwtModule } from '@nestjs/jwt';
 import { readFileSync } from 'fs';
 import { PassportModule } from '@nestjs/passport';
 import AuthController from '../controllers/auth.controller';
-import PasswordProvider from '../providers/PasswordProvider';
+import PasswordProvider from '../providers/Password.provider';
 import AuthService from '../services/auth.service';
 import LocalStrategy from '../strategies/local.strategy';
 import UsersModule from './users.module';

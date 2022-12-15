@@ -3,7 +3,7 @@ import { DeepMockProxy, mockDeep } from 'jest-mock-extended';
 import AuthService from '../auth.service';
 import PrismaService from '../prisma.service';
 import UsersService from '../users.service';
-import PasswordProvider from '../../providers/PasswordProvider';
+import PasswordProvider from '../../providers/Password.provider';
 import LocalStrategy from '../../strategies/local.strategy';
 import JwtStrategy from '../../strategies/jwt.strategy';
 import { JwtService } from '@nestjs/jwt';

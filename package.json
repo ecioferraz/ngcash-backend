@@ -78,6 +78,18 @@
     "collectCoverageFrom": [
       "**/*.(t|j)s"
     ],
+    "coveragePathIgnorePatterns": [
+      ".guard.ts",
+      ".module.ts",
+      ".provider.ts",
+      ".schema.ts",
+      ".strategy.ts",
+      "prisma.service.ts",
+      "interfaces",
+      "main.ts",
+      "mocks",
+      "node_modules"
+    ],
     "coverageDirectory": "../coverage",
     "testEnvironment": "node"
   }

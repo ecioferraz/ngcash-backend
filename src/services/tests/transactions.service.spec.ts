@@ -6,7 +6,7 @@ import AccountsService from '../accounts.service';
 import PrismaService from '../prisma.service';
 import TransactionsService from '../transactions.service';
 import UsersService from '../users.service';
-import PasswordProvider from '../../providers/PasswordProvider';
+import PasswordProvider from '../../providers/Password.provider';
 import UserMatch from '../../interfaces/UserMatch';
 import {
   accountMock,

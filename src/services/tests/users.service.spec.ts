@@ -5,7 +5,7 @@ import { DeepMockProxy, mockDeep } from 'jest-mock-extended';
 import AccountsService from '../accounts.service';
 import PrismaService from '../prisma.service';
 import UsersService from '../users.service';
-import PasswordProvider from '../../providers/PasswordProvider';
+import PasswordProvider from '../../providers/Password.provider';
 import {
   accountMock,
   userCreateWithoutAccountInputMock,
