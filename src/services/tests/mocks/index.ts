@@ -3,6 +3,7 @@ import TransactionInput from '../../../interfaces/TransactionInput';
 import UserMatch from '../../../interfaces/UserMatch';
 import GetTransactionsInput from '../../../interfaces/GetTransactionsInput';
 import UserWithoutPassword from '../../../interfaces/UserWithoutPassword';
+import TransactionBody from '../../../interfaces/TransactionBody';
 
 export const userWithPasswordMock: User = {
   id: 'userIdTest',
@@ -38,7 +39,7 @@ export const creditedAccountMock: Account = {
   balance: new Prisma.Decimal(150),
 };
 
-export const userMatch: UserMatch = {
+export const userMatchMock: UserMatch = {
   accountId: 'accountIdTest',
   username: 'usernameTest',
 };
@@ -54,6 +55,12 @@ export const readDebitedTransactionsInputMock: GetTransactionsInput = {
   username: 'usernameTest2',
   type: 'cash-out',
   orderBy: 'desc',
+};
+
+export const transactionBodyMock: TransactionBody = {
+  creditedUsername: 'usernameTest',
+  debitedUsername: 'usernameTest2',
+  value: new Prisma.Decimal(50),
 };
 
 export const makeTransactionInputMock: TransactionInput = {
@@ -86,3 +93,14 @@ export const transactionsMock: Transaction[] = [
     createdAt: new Date(),
   },
 ];
+
+export const invalidTransactionMock = {
+  creditedUsername: 'invalidTransaction',
+  debitedUsername: 'invalidTransaction',
+  value: new Prisma.Decimal(50),
+};
+
+export const invalidUserMock = {
+  password: 'invalidPassword',
+  username: 'invalidUsername',
+};
