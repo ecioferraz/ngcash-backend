@@ -1,4 +1,8 @@
-import { BadRequestException, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  NotFoundException,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import { Prisma, PrismaClient } from '@prisma/client';
 import { DeepMockProxy, mockDeep } from 'jest-mock-extended';
@@ -7,6 +11,7 @@ import PrismaService from '../prisma.service';
 import UserMatch from '../../interfaces/UserMatch';
 import {
   accountMock,
+  accountMock2,
   creditedAccountMock,
   userWithoutPasswordMock,
 } from './mocks';
@@ -29,6 +34,7 @@ describe('AccountsService', () => {
 
   const { username } = userWithoutPasswordMock;
   const { balance, id } = accountMock;
+  const { id: id2 } = accountMock2;
 
   describe('readOne', () => {
     it('should return the account required', async () => {
@@ -51,7 +57,10 @@ describe('AccountsService', () => {
       prismaService.account.findFirst.mockResolvedValueOnce(accountMock);
 
       expect(
-        await accountsService.matchUser({ accountId: id, username } as UserMatch),
+        await accountsService.matchUser({
+          accountId: id,
+          username,
+        } as UserMatch),
       ).toStrictEqual(accountMock);
     });
 
@@ -61,6 +70,17 @@ describe('AccountsService', () => {
       await expect(
         accountsService.matchUser({ username } as UserMatch),
       ).rejects.toBeInstanceOf(BadRequestException);
+    });
+
+    it('should throw a UnauthorizedException when username and accountId are not from the same user', async () => {
+      prismaService.account.findFirst.mockResolvedValueOnce(null);
+
+      await expect(
+        accountsService.matchUser({
+          username,
+          accountId: id2,
+        } as UserMatch),
+      ).rejects.toBeInstanceOf(UnauthorizedException);
     });
   });
 
@@ -83,7 +103,10 @@ describe('AccountsService', () => {
       prismaService.account.findFirst.mockResolvedValueOnce(accountMock);
 
       expect(
-        await accountsService.readBalance({ accountId: id, username } as UserMatch),
+        await accountsService.readBalance({
+          accountId: id,
+          username,
+        } as UserMatch),
       ).toStrictEqual(balance);
     });
   });
