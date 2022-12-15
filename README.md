@@ -7,7 +7,8 @@ Este foi um projeto desenvolvido para o processo seletivo da empresa NG.CASH e t
 
 **Back-end:**
 - Typescript
-- Nest.js
+- Node.js
+- NestJS
 - Prisma
 - Postgresql
 - Express
