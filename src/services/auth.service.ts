@@ -40,9 +40,9 @@ export default class AuthService {
   }
 
   async login({ username }: LoginBody) {
-    const payload = { username };
+    const user = await this.usersService.readOne({ username });
 
-    return { token: this.jwtService.sign(payload) };
+    return { ...user, token: this.jwtService.sign(user) };
   }
 
   async register(user: Prisma.UserCreateWithoutAccountInput) {
