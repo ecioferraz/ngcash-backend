@@ -42,7 +42,6 @@ export default class TransactionsController {
 
   @Get()
   async read(@Query() getTransactionsInput: GetTransactionsInput) {
-    console.log(getTransactionsInput);
     return this.transactionsService.read(getTransactionsInput);
   }
 
