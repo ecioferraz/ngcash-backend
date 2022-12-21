@@ -5,6 +5,7 @@ import {
   Delete,
   Get,
   Post,
+  Query,
   UseGuards,
 } from '@nestjs/common';
 import TransactionBody from '../interfaces/TransactionBody';
@@ -40,7 +41,8 @@ export default class TransactionsController {
   }
 
   @Get()
-  async read(@Body() getTransactionsInput: GetTransactionsInput) {
+  async read(@Query() getTransactionsInput: GetTransactionsInput) {
+    console.log(getTransactionsInput);
     return this.transactionsService.read(getTransactionsInput);
   }
 

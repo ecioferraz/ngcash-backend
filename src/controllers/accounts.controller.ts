@@ -1,10 +1,10 @@
 import {
-  Body,
   Controller,
   Delete,
   Get,
   Param,
   Post,
+  Query,
   UseGuards,
 } from '@nestjs/common';
 import { Account } from '@prisma/client';
@@ -28,7 +28,7 @@ export default class AccountsController {
   }
 
   @Get('/balance')
-  async readBalance(@Body() user: UserMatch) {
+  async readBalance(@Query() user: UserMatch) {
     return this.accountsService.readBalance(user);
   }
 
