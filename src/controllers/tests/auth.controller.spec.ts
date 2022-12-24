@@ -43,11 +43,17 @@ describe('AuthController', () => {
 
   describe('register', () => {
     it('should return a newly created user', async () => {
-      authService.register.mockResolvedValueOnce(userWithoutPasswordMock);
+      authService.register.mockResolvedValueOnce({
+        ...userWithoutPasswordMock,
+        token: 'token',
+      });
 
       expect(
         await authController.register(userCreateWithoutAccountInputMock),
-      ).toStrictEqual(userWithoutPasswordMock);
+      ).toStrictEqual({
+        ...userWithoutPasswordMock,
+        token: 'token',
+      });
     });
 
     it('should throw a BadRequestException when data is invalid', async () => {

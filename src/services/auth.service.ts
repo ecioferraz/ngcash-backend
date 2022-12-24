@@ -46,6 +46,7 @@ export default class AuthService {
   }
 
   async register(user: Prisma.UserCreateWithoutAccountInput) {
-    return this.usersService.create(user);
+    const newUser = await this.usersService.create(user);
+    return { ...newUser, token: this.jwtService.sign(user) }
   }
 }
