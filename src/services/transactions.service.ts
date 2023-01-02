@@ -37,22 +37,32 @@ export default class TransactionsService {
 
   private async getCreditedTransactions(id: Account['id'], orderBy: OrderBy) {
     return this.prisma.transaction.findMany({
-      where: { creditedAccountId: id },
+      include: {
+        debitedAccount: { select: { user: { select: { username: true } } } },
+      },
       orderBy: { createdAt: orderBy },
+      where: { creditedAccountId: id },
     });
   }
 
   private async getDebitedTransactions(id: Account['id'], orderBy: OrderBy) {
     return this.prisma.transaction.findMany({
-      where: { debitedAccountId: id },
+      include: {
+        creditedAccount: { select: { user: { select: { username: true } } } },
+      },
       orderBy: { createdAt: orderBy },
+      where: { debitedAccountId: id },
     });
   }
 
   private async getAllTransactions(id: Account['id'], orderBy: OrderBy) {
     return this.prisma.transaction.findMany({
-      where: { OR: [{ creditedAccountId: id }, { debitedAccountId: id }] },
+      include: {
+        creditedAccount: { select: { user: { select: { username: true } } } },
+        debitedAccount: { select: { user: { select: { username: true } } } },
+      },
       orderBy: { createdAt: orderBy },
+      where: { OR: [{ creditedAccountId: id }, { debitedAccountId: id }] },
     });
   }
 
