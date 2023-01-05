@@ -4,7 +4,7 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
-import ExceptionMessages from 'src/interfaces/ExceptionMessages';
+import { ExceptionMessages } from '../enums/ExceptionMessages';
 import UserWithoutPassword from '../interfaces/UserWithoutPassword';
 import PasswordProvider from '../providers/Password.provider';
 import AccountsService from './accounts.service';

@@ -5,7 +5,7 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 import { Account, Transaction, User } from '@prisma/client';
-import ExceptionMessages from 'src/interfaces/ExceptionMessages';
+import { ExceptionMessages } from '../enums/ExceptionMessages';
 import UserMatch from '../interfaces/UserMatch';
 import PrismaService from './prisma.service';
 

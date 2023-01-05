@@ -4,8 +4,8 @@ import AccountsService from '../services/accounts.service';
 import PrismaService from '../services/prisma.service';
 
 @Module({
-  providers: [AccountsService, PrismaService],
-  exports: [AccountsService],
   controllers: [AccountsController],
+  exports: [AccountsService],
+  providers: [AccountsService, PrismaService],
 })
 export default class AccountsModule {}

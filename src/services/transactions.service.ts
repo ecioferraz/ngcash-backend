@@ -1,6 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { Account, Prisma, User } from '@prisma/client';
-import ExceptionMessages from 'src/interfaces/ExceptionMessages';
+import { ExceptionMessages } from '../enums/ExceptionMessages';
 import GetTransactionsInput from '../interfaces/GetTransactionsInput';
 import TransactionInput from '../interfaces/TransactionInput';
 import OrderBy from '../types/OrderBy';

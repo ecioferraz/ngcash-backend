@@ -12,7 +12,7 @@ import TransactionBody from '../interfaces/TransactionBody';
 import JwtAuthGuard from '../guards/jwt-auth.guard';
 import GetTransactionsInput from '../interfaces/GetTransactionsInput';
 import TransactionsService from '../services/transactions.service';
-import ExceptionMessages from 'src/interfaces/ExceptionMessages';
+import { ExceptionMessages } from '../enums/ExceptionMessages';
 
 @UseGuards(JwtAuthGuard)
 @Controller('transactions')
