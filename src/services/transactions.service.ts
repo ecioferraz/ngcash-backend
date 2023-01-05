@@ -1,5 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { Account, Prisma, User } from '@prisma/client';
+import ExceptionMessages from 'src/interfaces/ExceptionMessages';
 import GetTransactionsInput from '../interfaces/GetTransactionsInput';
 import TransactionInput from '../interfaces/TransactionInput';
 import OrderBy from '../types/OrderBy';
@@ -23,9 +24,7 @@ export default class TransactionsService {
     );
 
     if (accountIds.includes(null)) {
-      throw new NotFoundException(
-        'One of the users could not be found, try again',
-      );
+      throw new NotFoundException(ExceptionMessages.someUserNotFound);
     }
 
     return accountIds;

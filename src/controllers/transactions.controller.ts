@@ -12,6 +12,7 @@ import TransactionBody from '../interfaces/TransactionBody';
 import JwtAuthGuard from '../guards/jwt-auth.guard';
 import GetTransactionsInput from '../interfaces/GetTransactionsInput';
 import TransactionsService from '../services/transactions.service';
+import ExceptionMessages from 'src/interfaces/ExceptionMessages';
 
 @UseGuards(JwtAuthGuard)
 @Controller('transactions')
@@ -23,7 +24,7 @@ export default class TransactionsController {
     const { creditedUsername, debitedUsername, value } = transactionInput;
 
     if (creditedUsername === debitedUsername) {
-      throw new BadRequestException('Cannot credit your own account');
+      throw new BadRequestException(ExceptionMessages.sameAccount);
     }
 
     const [creditedAccountId, debitedAccountId] =
