@@ -95,13 +95,13 @@ Para verificar cobertura de testes, rode o seguinte comando
 | `username` | `string` | **Obrigatório**. Seu nome de usuário |
 | `password` | `string` | **Obrigatório**. Sua senha |
 
-#### Realiza o login e retorna um token
+#### Realiza o login e retorna a id, username, accountId do usuário e um token com validade de 24 horas
 
 ```http
-  POST /login
+  GET /login
 ```
 
-| Body   | Tipo       | Descrição                           |
+| Query   | Tipo       | Descrição                           |
 | :---------- | :--------- | :---------------------------------- |
 | `username` | `string` | **Obrigatório**. Seu nome de usuário |
 | `password` | `string` | **Obrigatório**. Sua senha |
@@ -112,6 +112,11 @@ Para verificar cobertura de testes, rode o seguinte comando
   GET /users
 ```
 
+| Auth   | Tipo       | Descrição                           |
+| :---------- | :--------- | :---------------------------------- |
+| `Bearer Token` | `string` | **Obrigatório**. O token fornecido no login |
+
+
 #### Retorna um usuário contendo id, username e accountId
 
 ```http
@@ -121,17 +126,6 @@ Para verificar cobertura de testes, rode o seguinte comando
 | Parâmetro   | Tipo       | Descrição                                   |
 | :---------- | :--------- | :------------------------------------------ |
 | `id`      | `string` | **Obrigatório**. O ID do usuário que você quer |
-
-#### Retorna o saldo de um usuário
-
-```http
-  GET /accounts/balance
-```
-
-| Body   | Tipo       | Descrição                           |
-| :---------- | :--------- | :---------------------------------- |
-| `username` | `string` | **Obrigatório**. Seu nome de usuário |
-| `accountId` | `string` | **Obrigatório**. O ID da conta do mesmo usuário |
 
 | Auth   | Tipo       | Descrição                           |
 | :---------- | :--------- | :---------------------------------- |
@@ -147,11 +141,19 @@ Para verificar cobertura de testes, rode o seguinte comando
 | :---------- | :--------- | :------------------------------------------ |
 | `id`      | `string` | **Obrigatório**. O ID do usuário que você quer |
 
+| Auth   | Tipo       | Descrição                           |
+| :---------- | :--------- | :---------------------------------- |
+| `Bearer Token` | `string` | **Obrigatório**. O token fornecido no login |
+
 #### Retorna uma lista de contas cadastradas
 
 ```http
   GET /accounts
 ```
+
+| Auth   | Tipo       | Descrição                           |
+| :---------- | :--------- | :---------------------------------- |
+| `Bearer Token` | `string` | **Obrigatório**. O token fornecido no login |
 
 #### Retorna uma conta contendo id da conta e saldo
 
@@ -167,6 +169,21 @@ Para verificar cobertura de testes, rode o seguinte comando
 | :---------- | :--------- | :---------------------------------- |
 | `Bearer Token` | `string` | **Obrigatório**. O token fornecido no login |
 
+#### Retorna o saldo de um usuário
+
+```http
+  GET /accounts/balance
+```
+
+| Query   | Tipo       | Descrição                           |
+| :---------- | :--------- | :---------------------------------- |
+| `username` | `string` | **Obrigatório**. Seu nome de usuário |
+| `accountId` | `string` | **Obrigatório**. O ID da conta do mesmo usuário |
+
+| Auth   | Tipo       | Descrição                           |
+| :---------- | :--------- | :---------------------------------- |
+| `Bearer Token` | `string` | **Obrigatório**. O token fornecido no login |
+
 #### Deleta uma conta
 
 ```http
@@ -176,6 +193,10 @@ Para verificar cobertura de testes, rode o seguinte comando
 | Parâmetro   | Tipo       | Descrição                                   |
 | :---------- | :--------- | :------------------------------------------ |
 | `id`      | `string` | **Obrigatório**. O ID da conta que você quer |
+
+| Auth   | Tipo       | Descrição                           |
+| :---------- | :--------- | :---------------------------------- |
+| `Bearer Token` | `string` | **Obrigatório**. O token fornecido no login |
 
 #### Realiza uma transação e retorna um objeto contendo id da transação, id da conta creditada, id da conta debitada, valor e data e hora da transação
 
@@ -205,6 +226,20 @@ Para verificar cobertura de testes, rode o seguinte comando
 | `username` | `string` | **Obrigatório**. Seu nome de usuário |
 | `orderBy` | `string` | Ordem de listagem, aceita 'asc' ou 'desc' (default) |
 | `type` | `string` | Tipo de transação, aceita 'cash-in', 'cash-out' ou 'all' (default) |
+
+| Auth   | Tipo       | Descrição                           |
+| :---------- | :--------- | :---------------------------------- |
+| `Bearer Token` | `string` | **Obrigatório**. O token fornecido no login |
+
+### Deleta uma transação
+
+```http
+  DELETE /transactions/${id}
+```
+
+| Parâmetro   | Tipo       | Descrição                                   |
+| :---------- | :--------- | :------------------------------------------ |
+| `id`      | `string` | **Obrigatório**. O ID da transação que você quer |
 
 | Auth   | Tipo       | Descrição                           |
 | :---------- | :--------- | :---------------------------------- |
