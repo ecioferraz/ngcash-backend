@@ -5,6 +5,7 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 import { Account, Transaction, User } from '@prisma/client';
+import { ExceptionMessages } from '../enums/ExceptionMessages';
 import UserMatch from '../interfaces/UserMatch';
 import PrismaService from './prisma.service';
 
@@ -27,7 +28,7 @@ export default class AccountsService {
   async readOne(id: Account['id']) {
     const account = await this.prisma.account.findUnique({ where: { id } });
 
-    if (!account) throw new NotFoundException('Account not found');
+    if (!account) throw new NotFoundException(ExceptionMessages.accountNotFound);
 
     return account;
   }
@@ -40,9 +41,7 @@ export default class AccountsService {
     const { balance } = await this.matchUser({ accountId, username });
 
     if (+balance < +value) {
-      throw new BadRequestException(
-        "You don't have enough balance to complete this transaction",
-      );
+      throw new BadRequestException(ExceptionMessages.insufficientBalance);
     }
   }
 
@@ -50,14 +49,14 @@ export default class AccountsService {
     const { accountId: id, username } = user;
 
     if (!id || !username) {
-      throw new BadRequestException('Missing account id or username');
+      throw new BadRequestException(ExceptionMessages.invalidAccountOrUser);
     }
 
     const account = await this.prisma.account.findFirst({
       where: { id, user: { username } },
     });
 
-    if (!account) throw new UnauthorizedException('Unauthorized user');
+    if (!account) throw new UnauthorizedException(ExceptionMessages.unauthorized);
 
     return account;
   }
@@ -82,7 +81,7 @@ export default class AccountsService {
 
   async delete(id: Account['id']) {
     return this.prisma.account.delete({ where: { id } }).catch(() => {
-      throw new NotFoundException('Account not found');
+      throw new NotFoundException(ExceptionMessages.accountNotFound);
     });
   }
 }

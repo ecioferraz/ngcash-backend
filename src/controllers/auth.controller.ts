@@ -2,7 +2,9 @@ import {
   BadRequestException,
   Body,
   Controller,
+  Get,
   Post,
+  Query,
   UseGuards,
 } from '@nestjs/common';
 import LoginBody from '../interfaces/LoginBody';
@@ -15,8 +17,8 @@ export default class AuthController {
   constructor(private readonly authService: AuthService) {}
 
   @UseGuards(LocalAuthGuard)
-  @Post('/login')
-  async login(@Body() user: LoginBody) {
+  @Get('/login')
+  async login(@Query() user: LoginBody) {
     return this.authService.login(user);
   }
 

@@ -5,12 +5,14 @@ import {
   Delete,
   Get,
   Post,
+  Query,
   UseGuards,
 } from '@nestjs/common';
 import TransactionBody from '../interfaces/TransactionBody';
 import JwtAuthGuard from '../guards/jwt-auth.guard';
 import GetTransactionsInput from '../interfaces/GetTransactionsInput';
 import TransactionsService from '../services/transactions.service';
+import { ExceptionMessages } from '../enums/ExceptionMessages';
 
 @UseGuards(JwtAuthGuard)
 @Controller('transactions')
@@ -22,7 +24,7 @@ export default class TransactionsController {
     const { creditedUsername, debitedUsername, value } = transactionInput;
 
     if (creditedUsername === debitedUsername) {
-      throw new BadRequestException('Cannot credit your own account');
+      throw new BadRequestException(ExceptionMessages.sameAccount);
     }
 
     const [creditedAccountId, debitedAccountId] =
@@ -40,7 +42,7 @@ export default class TransactionsController {
   }
 
   @Get()
-  async read(@Body() getTransactionsInput: GetTransactionsInput) {
+  async read(@Query() getTransactionsInput: GetTransactionsInput) {
     return this.transactionsService.read(getTransactionsInput);
   }
 

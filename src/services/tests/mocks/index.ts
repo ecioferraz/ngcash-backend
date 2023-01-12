@@ -70,13 +70,18 @@ export const makeTransactionInputMock: TransactionInput = {
   value: new Prisma.Decimal(50),
 };
 
-export const transactionsMock: Transaction[] = [
+export const transactionsMock: (Transaction & {
+  debitedAccount: { user: { username: string } };
+  creditedAccount: { user: { username: string } };
+})[] = [
   {
     id: 'transactionIdTest',
     creditedAccountId: 'accountIdTest2',
     debitedAccountId: 'accountIdTest',
     value: new Prisma.Decimal(50),
     createdAt: new Date(),
+    creditedAccount: { user: { username: 'usernameTest2' } },
+    debitedAccount: { user: { username: 'usernameTest' } },
   },
   {
     id: 'transactionIdTest2',
@@ -84,6 +89,8 @@ export const transactionsMock: Transaction[] = [
     debitedAccountId: 'accountIdTest2',
     value: new Prisma.Decimal(30),
     createdAt: new Date(),
+    creditedAccount: { user: { username: 'usernameTest' } },
+    debitedAccount: { user: { username: 'usernameTest2' } },
   },
   {
     id: 'transactionIdTest3',
@@ -91,6 +98,8 @@ export const transactionsMock: Transaction[] = [
     debitedAccountId: 'accountIdTest',
     value: new Prisma.Decimal(65),
     createdAt: new Date(),
+    creditedAccount: { user: { username: 'usernameTest2' } },
+    debitedAccount: { user: { username: 'usernameTest' } },
   },
 ];
 

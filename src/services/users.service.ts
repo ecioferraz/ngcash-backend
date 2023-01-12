@@ -4,6 +4,7 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
+import { ExceptionMessages } from '../enums/ExceptionMessages';
 import UserWithoutPassword from '../interfaces/UserWithoutPassword';
 import PasswordProvider from '../providers/Password.provider';
 import AccountsService from './accounts.service';
@@ -21,7 +22,7 @@ export default class UsersService {
     const userFound: UserWithoutPassword | null =
       await this.prisma.user.findUnique({ where: user });
 
-    if (!userFound) throw new NotFoundException('User not found');
+    if (!userFound) throw new NotFoundException(ExceptionMessages.userNotFound);
 
     delete userFound.password;
 
@@ -37,7 +38,7 @@ export default class UsersService {
 
     const userExists = await this.findOne({ username });
 
-    if (userExists) throw new ConflictException('User already exists');
+    if (userExists) throw new ConflictException(ExceptionMessages.userAlreadyExists);
 
     const hashedPassword = await this.passwordProvider.hashPassword(password);
 
@@ -67,7 +68,7 @@ export default class UsersService {
 
   async delete(user: Prisma.UserWhereUniqueInput) {
     await this.prisma.user.delete({ where: user }).catch(() => {
-      throw new NotFoundException('User not found');
+      throw new NotFoundException(ExceptionMessages.userNotFound);
     });
   }
 }

@@ -1,5 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { Account, Prisma, User } from '@prisma/client';
+import { ExceptionMessages } from '../enums/ExceptionMessages';
 import GetTransactionsInput from '../interfaces/GetTransactionsInput';
 import TransactionInput from '../interfaces/TransactionInput';
 import OrderBy from '../types/OrderBy';
@@ -23,9 +24,7 @@ export default class TransactionsService {
     );
 
     if (accountIds.includes(null)) {
-      throw new NotFoundException(
-        'One of the users could not be found, try again',
-      );
+      throw new NotFoundException(ExceptionMessages.someUserNotFound);
     }
 
     return accountIds;
@@ -37,22 +36,32 @@ export default class TransactionsService {
 
   private async getCreditedTransactions(id: Account['id'], orderBy: OrderBy) {
     return this.prisma.transaction.findMany({
-      where: { creditedAccountId: id },
+      include: {
+        debitedAccount: { select: { user: { select: { username: true } } } },
+      },
       orderBy: { createdAt: orderBy },
+      where: { creditedAccountId: id },
     });
   }
 
   private async getDebitedTransactions(id: Account['id'], orderBy: OrderBy) {
     return this.prisma.transaction.findMany({
-      where: { debitedAccountId: id },
+      include: {
+        creditedAccount: { select: { user: { select: { username: true } } } },
+      },
       orderBy: { createdAt: orderBy },
+      where: { debitedAccountId: id },
     });
   }
 
   private async getAllTransactions(id: Account['id'], orderBy: OrderBy) {
     return this.prisma.transaction.findMany({
-      where: { OR: [{ creditedAccountId: id }, { debitedAccountId: id }] },
+      include: {
+        creditedAccount: { select: { user: { select: { username: true } } } },
+        debitedAccount: { select: { user: { select: { username: true } } } },
+      },
       orderBy: { createdAt: orderBy },
+      where: { OR: [{ creditedAccountId: id }, { debitedAccountId: id }] },
     });
   }
 

@@ -30,11 +30,14 @@ describe('AuthController', () => {
 
   describe('login', () => {
     it('should return a token', async () => {
-      authService.login.mockResolvedValueOnce({ token: 'token' });
+      authService.login.mockResolvedValueOnce({
+        ...userWithoutPasswordMock,
+        token: 'token',
+      });
 
       expect(
         await authController.login(userCreateWithoutAccountInputMock),
-      ).toStrictEqual({ token: 'token' });
+      ).toStrictEqual({ ...userWithoutPasswordMock, token: 'token' });
     });
   });
 

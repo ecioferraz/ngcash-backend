@@ -3,6 +3,7 @@ import { PassportStrategy } from '@nestjs/passport';
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import AuthService from '../services/auth.service';
 import { User } from '@prisma/client';
+import { ExceptionMessages } from '../enums/ExceptionMessages';
 
 @Injectable()
 export default class LocalStrategy extends PassportStrategy(Strategy) {
@@ -17,7 +18,7 @@ export default class LocalStrategy extends PassportStrategy(Strategy) {
     });
 
     if (!validUser) {
-      throw new UnauthorizedException('Invalid username or password');
+      throw new UnauthorizedException(ExceptionMessages.invalidLogin);
     }
 
     return validUser;
