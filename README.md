@@ -1,5 +1,5 @@
 
-# NG.CASH Backend
+# NG.CASH Back-end
 
 Este foi um projeto desenvolvido para o processo seletivo da empresa NG.CASH e trata-se de uma aplicação onde é possível realizar transferências entre usuários.
 
